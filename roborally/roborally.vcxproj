@@ -152,16 +152,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Card.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Direction.h" />
+    <ClInclude Include="MovementCard.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Robot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Card.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Direction.cpp" />
+    <ClCompile Include="MovementCard.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

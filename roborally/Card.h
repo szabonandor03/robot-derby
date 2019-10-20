@@ -3,6 +3,7 @@ class Card
 {
 public:
 	Card();
-	~Card();
+	virtual ~Card();
+	virtual void execute() = 0;
 };
 

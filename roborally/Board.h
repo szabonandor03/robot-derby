@@ -1,4 +1,5 @@
 #pragma once
+#include "Card.h"
 #include "Cell.h"
 #include <cstddef>
 #include <iostream>
@@ -26,6 +27,8 @@ private:
 	std::size_t size_y_;
 	std::vector<Cell> cells_;
 	std::map<std::string, std::shared_ptr<Robot>> robots_;
+	Card card_;
+
 	std::size_t moveRobot(std::size_t cell_index, Direction direction);
 	void turnRobot(std::size_t cell_index, Direction direction);
 };
