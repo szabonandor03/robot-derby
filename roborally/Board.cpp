@@ -9,6 +9,7 @@ Board::Board(std::size_t size_x, std::size_t size_y): size_x_(size_x), size_y_(s
 
 Board::~Board()
 {
+
 }
 
 
@@ -53,66 +54,48 @@ void Board::addRobot(std::string robot_name)
 
 }
 
-void Board::placeRobot(size_t cell_index, const std::string& robot_name)
+void Board::placeRobot(const std::string& robot_name, std::size_t cell_index)
 {	
 	if (robots_.find(robot_name) == robots_.cend())
 	{
 		return;
 	}
 
-	cells_[cell_index].addRobot(robots_.at(robot_name));
+	robots_[robot_name]->moveMe(cell_index);
 }
 
-std::size_t Board::moveRobot(std::size_t cell_index, Direction direction)
+void Board::moveRobot(const std::string& robot_name, Direction direction)
 {
-	std::size_t neighbor_index = neighbor(cell_index, direction);
-	if ((cell_index >= cells_.size()) || 
-		(!cells_[cell_index].isDirectionFree(direction)) ||
-		(cells_[cell_index].myRobot().expired()) ||
-		(neighbor_index == cells_.size()))
+	std::size_t neighbor_index = neighbor(robots_[robot_name]->cell(), direction);
+	if ((cells_[robots_[robot_name]->cell()].isDirectionFree(direction)) &&
+		(neighbor_index != cells_.size()) &&
+		(cells_[neighbor_index].hasFloor()))
 	{
-		return cell_index;
+		robots_[robot_name]->moveMe(neighbor_index);
 	}
 
-	
-	cells_[cell_index].removeRobot();
-	if (cells_[neighbor_index].hasFloor())
-	{
-		cells_[neighbor_index].addRobot(cells_[cell_index].myRobot());
-	}
-
-	return neighbor_index;
 }
 
 
-void Board::stepCommandRobot(std::size_t cell_index, int number_of_steps)
+void Board::stepCommandRobot(const std::string& robot_name, int number_of_steps)
 {
-	std::shared_ptr<Robot> robot = cells_[cell_index].myRobot().lock();
-	if (!robot)
-	{
-		return;
-	}
-	std::size_t starting_index = cell_index;
+	std::shared_ptr<Robot> robot = robots_[robot_name];
 	for (int i = 0; i < number_of_steps; ++i)
 	{
-		starting_index = moveRobot(starting_index, robot->direction());
+		moveRobot(robot_name, robot->direction());
 	}
 }
 
-void Board::turnCommandRobot(std::size_t cell_index, bool clockwise)
+void Board::turnCommandRobot(const std::string& robot_name, bool clockwise)
 {
-	if ((cell_index >= cells_.size()) ||
-		(cells_[cell_index].myRobot().expired()))
-	{
-		return;
-	}
+	std::shared_ptr<Robot> robot = robots_[robot_name];
 	if (clockwise)
 	{
-		turnRobot(cell_index, clockwiseDirection(cells_[cell_index].myRobot().lock()->direction()));
+		turnRobot(robot_name, clockwiseDirection(robot->direction()));
 	}
 	else
 	{
-		turnRobot(cell_index, counterClockwiseDirection(cells_[cell_index].myRobot().lock()->direction()));
+		turnRobot(robot_name, counterClockwiseDirection(robot->direction()));
 	}
 }
 
@@ -126,19 +109,15 @@ void Board::removeFloor(std::size_t cell_index)
 	cells_[cell_index].removeFloor();
 }
 
-void Board::turnRobot(std::size_t cell_index, Direction direction)
+void Board::turnRobot(const std::string& robot_name, Direction direction)
 {
-	if ((cell_index >= cells_.size()) ||
-		(cells_[cell_index].myRobot().expired()))
-	{
-		return;
-	}
+	std::shared_ptr<Robot> robot = robots_[robot_name];
 
-	cells_[cell_index].myRobot().lock()->setDirection(direction);
+	robot->setDirection(direction);
 
 }
 
-void Board::dump() const
+void Board::dump(const std::string& robot_name) const
 {
 	std::cout << "size: x = " << size_x_ << " y = " << size_y_ << std::endl;
 	for (std::size_t i = 0 ; i < cells_.size(); ++i)
@@ -165,8 +144,7 @@ void Board::dump() const
 			std::cout << "right ";
 		}
 		
-		
-		auto robot = cells_[i].myRobot().lock();
+		std::shared_ptr<Robot> robot = robots_.at(robot_name);
 		std::cout << "; robot: ";
 		if (robot)
 			std::cout << robot->name();

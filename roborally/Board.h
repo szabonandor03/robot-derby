@@ -15,21 +15,20 @@ public:
 	void newWall(std::size_t cell_index, Direction direction);
 
 	void addRobot(std::string robot_name);
-	void placeRobot(std::size_t cell_index, const std::string& robot_name);
-	void stepCommandRobot(std::size_t cell_index, int number_of_steps);
-	void turnCommandRobot(std::size_t cell_index, bool clockwise);
+	void placeRobot(const std::string& robot_name, std::size_t cell_index);
+	void stepCommandRobot(const std::string& robot_name, int number_of_steps);
+	void turnCommandRobot(const std::string& robot_name, bool clockwise);
 
 	void removeFloor(std::size_t cell_index);
 
-	void dump() const;
+	void dump(const std::string& robot_name) const;
 private:
 	std::size_t size_x_;
 	std::size_t size_y_;
 	std::vector<Cell> cells_;
 	std::map<std::string, std::shared_ptr<Robot>> robots_;
-	Card card_;
 
-	std::size_t moveRobot(std::size_t cell_index, Direction direction);
-	void turnRobot(std::size_t cell_index, Direction direction);
+	void moveRobot(const std::string& robot_name, Direction direction);
+	void turnRobot(const std::string& robot_name, Direction direction);
 };
 

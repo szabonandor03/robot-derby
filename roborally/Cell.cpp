@@ -24,15 +24,6 @@ void Cell::blockDirection(Direction direction)
 	walls_[direction] = true;
 }
 
-void Cell::addRobot(std::weak_ptr<Robot> robot)
-{
-	robot_ = robot;
-}
-
-void Cell::removeRobot()
-{
-	robot_.reset();
-}
 
 bool Cell::hasFloor() const
 {
@@ -44,7 +35,3 @@ void Cell::removeFloor()
 	floor_ = false;
 }
 
-std::weak_ptr<Robot> Cell::myRobot() const
-{
-	return robot_;
-}

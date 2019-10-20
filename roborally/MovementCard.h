@@ -4,12 +4,13 @@ class MovementCard :
 	public Card
 {
 public:
-	MovementCard(int cell_number, int number_of_steps);
+	MovementCard(Board board, int number_of_steps);
 	~MovementCard();
 	void execute() override;
 
 
 private:
+	Board board_;
 	int number_of_steps_;
 };
 

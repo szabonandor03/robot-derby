@@ -2,10 +2,11 @@
 #include "Robot.h"
 
 
-Robot::Robot(std::string name):
+Robot::Robot(std::string name) :
 	Piece(),
 	name_(std::move(name)),
-	direction_(Direction::UP)
+	direction_(Direction::UP),
+	my_cell_(0)
 {
 }
 
@@ -27,4 +28,14 @@ Direction Robot::direction() const
 void Robot::setDirection(Direction direction)
 {
 	direction_ = direction;
+}
+
+void Robot::moveMe(std::size_t new_cell_index)
+{
+	my_cell_ = new_cell_index;
+}
+
+std::size_t Robot::cell() const
+{
+	return my_cell_;
 }
